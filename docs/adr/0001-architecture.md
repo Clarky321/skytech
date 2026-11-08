@@ -23,9 +23,9 @@ SkyTech.ru — технический портал (статьи, база зн�
    уведомления). Никаких прямых внешних вызовов после commit в HTTP-обработчике.
 6. **Content model:** одна таблица `content` с `type` (`article`, `page`; позже `kb`, `doc_page`).
    Ревизии неизменяемы; публичный сайт читает только опубликованный снимок.
-7. **Markdown — source of truth.** HTML строит только `packages/content-render`, только на
-   сервере; raw HTML запрещён; sanitize обязателен.
-8. **Media** только в S3-совместимом хранилище; в Markdown — ссылки `media:ID`; SVG и
+7. ~~**Markdown — source of truth.**~~ **Заменено ADR 0002:** тело материала — строго валидируемый
+   JSON-документ; HTML строит только `packages/content-render` на сервере; sanitize обязателен.
+8. **Media** только в S3-совместимом хранилище; в документе — ссылка `mediaId` (ADR 0002); SVG и
    не-изображения запрещены в MVP.
 9. **Auth:** серверные сессии (httpOnly cookie, в БД хэш токена), Argon2id, deny-by-default,
    `@Public()` для открытых маршрутов, CSRF-проверка Origin. JWT для браузера не используется.

@@ -13,6 +13,7 @@
 ## Стек (зафиксирован, см. ADR 0001)
 
 Node 24 LTS · pnpm (corepack) · Turborepo · TypeScript 6.0 (strict) · ESLint 9 + Prettier ·
+TipTap 3 (редактор) · Tailwind 4 + shadcn/ui (Radix) ·
 Vitest + Testing Library + Playwright · Next.js 16 (App Router, RSC) · NestJS 12 (ESM) ·
 PostgreSQL 17 + Drizzle · Redis 7 + BullMQ · S3 (MinIO в dev) · nginx · Docker Compose.
 
@@ -47,7 +48,14 @@ pnpm test             # Vitest во всех пакетах
 pnpm format           # Prettier --write
 pnpm check            # format:check + lint + typecheck + test + build (как CI)
 pnpm --filter @skytech/api test   # команда для одного пакета
+pnpm infra:up         # PostgreSQL, Redis, MinIO (нужно для API и интеграционных тестов)
+pnpm db:migrate | db:reset | db:seed
+pnpm user:create --email … --name … --role admin   # пароль печатается один раз
+pnpm dev:worker       # запланированные публикации
+pnpm e2e              # Playwright на изолированном стеке (3100/4100, БД skytech_e2e)
 ```
+
+Подробности — `docs/runbook.md`.
 
 ## Архитектурные инварианты (менять только через обсуждение + ADR)
 
@@ -56,8 +64,10 @@ pnpm --filter @skytech/api test   # команда для одного паке�
 3. Побочные эффекты (ревалидация, IndexNow, индексация, уведомления) — только через transactional outbox.
 4. Одна таблица `content` (`article`, `page`; позже `kb`, `doc_page`). Ревизии неизменяемы.
    Сайт читает только опубликованный снимок; правка не меняет сайт до публикации.
-5. Markdown — source of truth. HTML строит только `content-render` на сервере. Raw HTML запрещён, sanitize обязателен.
-6. Медиа только в S3, ссылки в Markdown — `media:ID`. Только JPEG/PNG/WebP/GIF ≤ 10 MB. SVG запрещён.
+5. Тело материала — **JSON-документ SkyTech** (строгое подмножество TipTap/ProseMirror, `documentSchema` в contracts, ADR 0002).
+   HTML строит только `content-render` на сервере (JSON → HAST → sanitize). Raw HTML запрещён. Markdown не хранится.
+6. Медиа только в S3 (загрузка через API: проверка сигнатуры → sharp → WebP без EXIF). В документе — `image.mediaId`, не URL.
+   Только JPEG/PNG/WebP/GIF ≤ 10 MB. SVG запрещён. Используемое медиа удалить нельзя (`revision_media`).
 7. Один origin: nginx `/api` → NestJS, остальное → Next.js. Админка — `/admin` в `apps/web`.
 8. Auth: серверные сессии (httpOnly, Secure, SameSite=Lax; в БД — хэш токена), Argon2id.
    **JWT для браузера не используется.** Deny-by-default, `@Public()` явно. Проверка прав — только backend.
