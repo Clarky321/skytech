@@ -1,8 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "SkyTech library package (ESM, compiled to dist)",
+  "display": "SkyTech library package (ESM, compiled to dist, runs in browser and Node)",
   "extends": "./base.json",
   "compilerOptions": {
+    "lib": ["ES2024", "DOM"],
     "verbatimModuleSyntax": true
   }
 }
