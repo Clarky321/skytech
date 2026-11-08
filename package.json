@@ -14,7 +14,18 @@
     "test": "turbo run test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "pnpm format:check && turbo run lint typecheck test build"
+    "check": "pnpm format:check && turbo run lint typecheck test build",
+    "infra:up": "docker compose -f docker/compose.dev.yml up -d --wait postgres redis minio && docker compose -f docker/compose.dev.yml run --rm minio-init",
+    "infra:down": "docker compose -f docker/compose.dev.yml down",
+    "infra:reset": "docker compose -f docker/compose.dev.yml down -v",
+    "infra:logs": "docker compose -f docker/compose.dev.yml logs -f --tail=100",
+    "db:generate": "pnpm --filter @skytech/api db:generate",
+    "db:migrate": "pnpm --filter @skytech/api db:migrate",
+    "db:seed": "pnpm --filter @skytech/api db:seed",
+    "db:reset": "pnpm --filter @skytech/api db:reset",
+    "user:create": "pnpm --filter @skytech/api cli user:create",
+    "dev:worker": "pnpm --filter @skytech/api dev:worker",
+    "e2e": "pnpm --filter @skytech/web e2e"
   },
   "devDependencies": {
     "prettier": "3.9.10",

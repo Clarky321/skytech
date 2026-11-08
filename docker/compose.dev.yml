@@ -1,0 +1,68 @@
+# Local development infrastructure. Apps (web, api) run on the host via `pnpm dev`.
+# Credentials here are development-only defaults and must never be reused in production.
+name: skytech
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: skytech
+      POSTGRES_PASSWORD: skytech
+      POSTGRES_DB: skytech
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U skytech -d skytech']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: ['redis-server', '--appendonly', 'no', '--save', '']
+    ports:
+      - '127.0.0.1:6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    # Official MinIO images are no longer published; this is a frozen MinIO build (dev only).
+    # See docs/adr/0002-structured-document-and-block-editor.md.
+    image: bitnamilegacy/minio:2025.7.23
+    environment:
+      MINIO_ROOT_USER: skytech
+      MINIO_ROOT_PASSWORD: skytech-dev-secret
+      # Buckets are created private; minio-init then allows anonymous GetObject only.
+      MINIO_DEFAULT_BUCKETS: skytech-media,skytech-media-test
+    ports:
+      - '127.0.0.1:9000:9000'
+      - '127.0.0.1:9001:9001'
+    volumes:
+      - minio-data:/bitnami/minio/data
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://localhost:9000/minio/health/live']
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  # One-shot: anonymous users may read an object by its exact key, but cannot list the bucket
+  # (MinIO's canned "download" policy would also allow listing). Same rule as production S3.
+  minio-init:
+    image: bitnamilegacy/minio:2025.7.23
+    depends_on:
+      minio:
+        condition: service_healthy
+    volumes:
+      - ./minio/public-read-policy.sh:/public-read-policy.sh:ro
+    entrypoint: ['/bin/sh', '/public-read-policy.sh']
+    restart: 'no'
+
+volumes:
+  postgres-data:
+  minio-data:
