@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "SkyTech library package (ESM, compiled to dist)",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "verbatimModuleSyntax": true
+  }
+}

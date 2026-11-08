@@ -1,0 +1,30 @@
+{
+  "name": "@skytech/content-render",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The single Markdown → sanitized HTML pipeline (implemented in Phase 4.2)",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@skytech/eslint-config": "workspace:*",
+    "@skytech/tsconfig": "workspace:*",
+    "eslint": "9.39.5",
+    "typescript": "~6.0.3",
+    "vitest": "5.1.0"
+  }
+}
