@@ -92,6 +92,12 @@ lint, typecheck, test, build проходят · документация и `do
 `git diff` проверен · нет случайных файлов и секретов · архитектурные инварианты соблюдены.
 Commit: `feat|fix|refactor|test|docs|chore(scope): ...` — один шаг = один commit.
 
+## Git (подробно — `docs/git-workflow.md`)
+
+`main` — стабильная (только PR), `develop` — разработка, шаг плана — ветка
+`feature/phase-<N>[.<M>]-<кратко>` от `develop`, PR в `develop` (squash).
+Ветки создаются при начале шага, не заранее. Force push в `main`/`develop` запрещён.
+
 ## Окружение разработчика
 
 Windows 11 + PowerShell + Docker Desktop. Команды должны работать в PowerShell.
