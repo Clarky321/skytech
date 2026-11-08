@@ -35,6 +35,18 @@ export function base(tsconfigRootDir) {
       files: ['**/*.js', '**/*.mjs', '**/*.cjs'],
       ...tseslint.configs.disableTypeChecked,
     },
+    {
+      // Tests read untyped HTTP/JSON responses (supertest `res.body` is `any`).
+      // Application code keeps the full unsafe-* checks.
+      files: ['**/*.test.ts', '**/*.test.tsx', '**/test/**/*.ts', '**/e2e/**/*.ts'],
+      rules: {
+        '@typescript-eslint/no-unsafe-assignment': 'off',
+        '@typescript-eslint/no-unsafe-member-access': 'off',
+        '@typescript-eslint/no-unsafe-call': 'off',
+        '@typescript-eslint/no-unsafe-argument': 'off',
+        '@typescript-eslint/no-unsafe-return': 'off',
+      },
+    },
     prettier,
   );
 }

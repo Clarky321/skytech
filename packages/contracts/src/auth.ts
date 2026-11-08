@@ -38,10 +38,8 @@ export function hasPermission(role: Role, permission: Permission): boolean {
 export const PASSWORD_MIN_LENGTH = 12;
 
 export const loginSchema = z.object({
-  email: z
-    .email()
-    .max(254)
-    .transform((v) => v.trim().toLowerCase()),
+  // Normalise first, then validate, so ' Admin@Example.ru ' is accepted as admin@example.ru.
+  email: z.string().trim().toLowerCase().max(254).pipe(z.email()),
   password: z.string().min(1).max(1024),
 });
 export type LoginInput = z.infer<typeof loginSchema>;
