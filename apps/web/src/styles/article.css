@@ -1,0 +1,256 @@
+/*
+ * Typography of rendered articles. Used by the public site, the admin preview and
+ * (via .ProseMirror.article-body) the editor, so authors see real output while writing.
+ * HTML comes only from @skytech/content-render (see docs/adr/0002).
+ */
+.article-body {
+  --flow: 1.15em;
+  color: var(--foreground);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+}
+.article-body > * + * {
+  margin-top: var(--flow);
+}
+
+.article-body :where(h2, h3, h4, h5) {
+  position: relative;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  scroll-margin-top: 5.5rem;
+}
+.article-body h2 {
+  font-size: 1.6rem;
+  margin-top: 2.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+.article-body h3 {
+  font-size: 1.3rem;
+  margin-top: 2.1rem;
+}
+.article-body h4 {
+  font-size: 1.12rem;
+  margin-top: 1.8rem;
+}
+.article-body h5 {
+  font-size: 1rem;
+  margin-top: 1.6rem;
+  text-transform: none;
+}
+.article-body :where(h2, h3, h4, h5) + * {
+  margin-top: 0.75rem;
+}
+.article-body .heading-anchor {
+  margin-left: 0.4rem;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  font-weight: 400;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.article-body :where(h2, h3, h4, h5):hover .heading-anchor,
+.article-body .heading-anchor:focus-visible {
+  opacity: 1;
+}
+
+.article-body a:not(.heading-anchor) {
+  color: var(--primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.article-body a:not(.heading-anchor):hover {
+  text-decoration-thickness: 2px;
+}
+.article-body strong {
+  font-weight: 650;
+}
+
+.article-body :not(pre) > code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  padding: 0.12em 0.38em;
+  border-radius: 0.3rem;
+  background: var(--muted);
+  border: 1px solid var(--border);
+  white-space: break-spaces;
+}
+
+.article-body :where(ul, ol) {
+  padding-left: 1.5rem;
+}
+.article-body ul {
+  list-style: disc;
+}
+.article-body ol {
+  list-style: decimal;
+}
+.article-body li + li,
+.article-body li > :where(ul, ol) {
+  margin-top: 0.35rem;
+}
+.article-body li > p + p {
+  margin-top: 0.5rem;
+}
+.article-body li::marker {
+  color: var(--muted-foreground);
+}
+
+.article-body .task-list,
+.article-body ul[data-type='taskList'] {
+  list-style: none;
+  padding-left: 0.1rem;
+}
+.article-body .task-list__item,
+.article-body ul[data-type='taskList'] li {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+}
+.article-body .task-list__item input,
+.article-body ul[data-type='taskList'] li > label input {
+  margin-top: 0.45rem;
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--primary);
+  flex-shrink: 0;
+}
+.article-body .task-list__item[data-checked='true'] .task-list__content,
+.article-body ul[data-type='taskList'] li[data-checked='true'] > div {
+  color: var(--muted-foreground);
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+}
+
+.article-body blockquote {
+  border-left: 3px solid var(--border);
+  padding: 0.1rem 0 0.1rem 1.1rem;
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+
+.article-body hr {
+  border: 0;
+  height: 1px;
+  background: var(--border);
+  margin: 2.4rem 0;
+}
+
+/* ---- callouts ---- */
+.article-body .callout,
+.article-body [data-type='callout'] {
+  --c-bg: var(--callout-info-bg);
+  --c-border: var(--callout-info-border);
+  --c-fg: var(--callout-info-fg);
+  position: relative;
+  padding: 0.95rem 1.1rem 0.95rem 3rem;
+  border: 1px solid color-mix(in oklch, var(--c-border) 35%, transparent);
+  border-left: 4px solid var(--c-border);
+  border-radius: var(--radius);
+  background: var(--c-bg);
+}
+.article-body .callout::before,
+.article-body [data-type='callout']::before {
+  content: '';
+  position: absolute;
+  left: 1rem;
+  top: 1.05rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  background: var(--c-border);
+  mask: var(--c-icon) center / contain no-repeat;
+}
+.article-body .callout--info,
+.article-body [data-variant='info'] {
+  --c-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 16v-4M12 8h.01'/%3E%3C/svg%3E");
+}
+.article-body .callout--warning,
+.article-body [data-variant='warning'] {
+  --c-bg: var(--callout-warning-bg);
+  --c-border: var(--callout-warning-border);
+  --c-fg: var(--callout-warning-fg);
+  --c-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4M12 17h.01'/%3E%3C/svg%3E");
+}
+.article-body .callout--danger,
+.article-body [data-variant='danger'] {
+  --c-bg: var(--callout-danger-bg);
+  --c-border: var(--callout-danger-border);
+  --c-fg: var(--callout-danger-fg);
+  --c-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7.86 2h8.28L22 7.86v8.28L16.14 22H7.86L2 16.14V7.86z'/%3E%3Cpath d='m15 9-6 6M9 9l6 6'/%3E%3C/svg%3E");
+}
+.article-body .callout--success,
+.article-body [data-variant='success'] {
+  --c-bg: var(--callout-success-bg);
+  --c-border: var(--callout-success-border);
+  --c-fg: var(--callout-success-fg);
+  --c-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E");
+}
+.article-body .callout__title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-fg);
+  margin-bottom: 0.25rem;
+}
+.article-body .callout__body > * + *,
+.article-body [data-type='callout'] > div > * + * {
+  margin-top: 0.6rem;
+}
+
+/* ---- tables ---- */
+.article-body .table-wrap,
+.article-body .tableWrapper {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+.article-body :where(th, td) {
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+  vertical-align: top;
+  min-width: 6rem;
+}
+.article-body :where(th, td) + :where(th, td) {
+  border-left: 1px solid var(--border);
+}
+.article-body th {
+  background: var(--muted);
+  font-weight: 600;
+}
+.article-body tbody tr:last-child > * {
+  border-bottom: 0;
+}
+.article-body :where(th, td) > * + * {
+  margin-top: 0.4rem;
+}
+
+/* ---- images ---- */
+.article-body .doc-image {
+  margin-top: 1.6rem;
+  margin-bottom: 1.6rem;
+}
+.article-body .doc-image img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.article-body figcaption {
+  margin-top: 0.6rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}

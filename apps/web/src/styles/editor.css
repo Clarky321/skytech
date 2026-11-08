@@ -1,0 +1,134 @@
+/* Block editor (TipTap / ProseMirror). The editable area also carries .article-body,
+   so authors see the published typography while writing. */
+
+.ProseMirror {
+  caret-color: var(--primary);
+  word-break: break-word;
+}
+.ProseMirror > * + * {
+  margin-top: var(--flow, 1.15em);
+}
+
+/* In the editor H1–H4 are shown as on the site (h2–h5 sizes). */
+.ProseMirror h1 {
+  font-size: 1.6rem;
+  font-weight: 650;
+  margin-top: 2.2rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: -0.015em;
+}
+.ProseMirror h2 {
+  font-size: 1.3rem;
+  font-weight: 650;
+  margin-top: 1.9rem;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.ProseMirror h3 {
+  font-size: 1.12rem;
+  margin-top: 1.6rem;
+}
+.ProseMirror h4 {
+  font-size: 1rem;
+  margin-top: 1.4rem;
+}
+.ProseMirror :where(h1, h2, h3, h4) {
+  line-height: 1.3;
+}
+.ProseMirror > :first-child {
+  margin-top: 0;
+}
+
+/* Placeholder for empty blocks */
+.ProseMirror :where(p, h1, h2, h3, h4).is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--muted-foreground);
+  opacity: 0.7;
+}
+
+/* Selected atom nodes (images, dividers) */
+.ProseMirror .ProseMirror-selectednode,
+.ProseMirror .doc-image.is-selected img {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+.ProseMirror hr {
+  cursor: pointer;
+  margin: 1.8rem 0;
+}
+.ProseMirror hr.ProseMirror-selectednode {
+  outline-offset: 6px;
+}
+
+/* Drop cursor & gap cursor */
+.ProseMirror-gapcursor {
+  display: none;
+  pointer-events: none;
+  position: relative;
+}
+.ProseMirror-gapcursor::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  border-top: 2px solid var(--primary);
+  animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+}
+.ProseMirror-focused .ProseMirror-gapcursor {
+  display: block;
+}
+@keyframes ProseMirror-cursor-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* Tables */
+.ProseMirror .tableWrapper {
+  margin: 1.4rem 0;
+}
+.ProseMirror table .selectedCell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in oklch, var(--primary) 14%, transparent);
+  pointer-events: none;
+}
+.ProseMirror :where(td, th) {
+  position: relative;
+}
+.ProseMirror :where(td, th) > p {
+  margin: 0;
+}
+
+/* Callouts in the editor need room for the variant switcher */
+.ProseMirror [data-type='callout'] {
+  padding-right: 7.5rem;
+}
+
+/* TipTap task lists */
+.ProseMirror ul[data-type='taskList'] li > label {
+  user-select: none;
+  flex-shrink: 0;
+}
+.ProseMirror ul[data-type='taskList'] li > div {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Code blocks in the editor */
+.ProseMirror .code-block pre code {
+  display: block;
+  min-height: 1.4em;
+}
+
+/* Images */
+.ProseMirror .doc-image img {
+  cursor: grab;
+}
