@@ -27,7 +27,7 @@
     "user:create": "pnpm build:api && pnpm --filter @skytech/api cli user:create",
     "user:reset-password": "pnpm build:api && pnpm --filter @skytech/api cli user:reset-password",
     "dev:worker": "pnpm --filter @skytech/api dev:worker",
-    "e2e": "pnpm --filter @skytech/web e2e"
+    "e2e": "pnpm build:api && pnpm --filter @skytech/web e2e"
   },
   "devDependencies": {
     "prettier": "3.9.10",

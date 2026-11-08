@@ -6,7 +6,18 @@ import tseslint from 'typescript-eslint';
 /** @param {string} tsconfigRootDir absolute path of the package (pass import.meta.dirname) */
 export function base(tsconfigRootDir) {
   return tseslint.config(
-    { ignores: ['dist/**', '.next/**', 'coverage/**', '.turbo/**', 'next-env.d.ts'] },
+    {
+      ignores: [
+        'dist/**',
+        '.next/**',
+        '.next-e2e/**',
+        'coverage/**',
+        '.turbo/**',
+        'test-results/**',
+        'playwright-report/**',
+        'next-env.d.ts',
+      ],
+    },
     js.configs.recommended,
     ...tseslint.configs.strictTypeChecked,
     {
