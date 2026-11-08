@@ -1,0 +1,72 @@
+import type { Schema } from 'hast-util-sanitize';
+
+/**
+ * Allow-list for rendered articles. The renderer only emits these elements/attributes;
+ * the sanitizer is a second line of defence in case a future change emits something else.
+ * Not derived from GitHub's default schema on purpose: smaller surface, explicit rules.
+ */
+export const articleSanitizeSchema: Schema = {
+  strip: ['script', 'style'],
+  clobberPrefix: '',
+  clobber: [],
+  ancestors: {},
+  protocols: {
+    href: ['http', 'https', 'mailto'],
+    src: ['http', 'https'],
+  },
+  tagNames: [
+    'p',
+    'br',
+    'strong',
+    'em',
+    'u',
+    's',
+    'code',
+    'a',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'blockquote',
+    'aside',
+    'div',
+    'span',
+    'pre',
+    'figure',
+    'figcaption',
+    'img',
+    'hr',
+    'ul',
+    'ol',
+    'li',
+    'input',
+    'table',
+    'thead',
+    'tbody',
+    'tr',
+    'th',
+    'td',
+    'button',
+  ],
+  attributes: {
+    '*': ['className'],
+    a: ['href', 'rel'],
+    h2: ['id'],
+    h3: ['id'],
+    h4: ['id'],
+    h5: ['id'],
+    aside: ['role', 'dataVariant'],
+    figure: ['dataLanguage'],
+    img: ['src', 'srcSet', 'sizes', 'width', 'height', 'alt', 'loading', 'decoding'],
+    ol: ['start'],
+    li: ['dataChecked'],
+    input: [['type', 'checkbox'], ['disabled', true], 'checked'],
+    th: ['colSpan', 'rowSpan', 'scope'],
+    td: ['colSpan', 'rowSpan'],
+    button: [['type', 'button'], 'dataCopyCode', 'ariaLabel'],
+  },
+  required: {
+    input: { type: 'checkbox', disabled: true },
+    button: { type: 'button' },
+  },
+};

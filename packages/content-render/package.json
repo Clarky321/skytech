@@ -2,12 +2,16 @@
   "name": "@skytech/content-render",
   "version": "0.0.0",
   "private": true,
-  "description": "The single Markdown → sanitized HTML pipeline (implemented in Phase 4.2)",
+  "description": "The single SkyTech document (JSON) → sanitized HTML renderer (ADR 0002)",
   "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./highlight": {
+      "types": "./dist/highlight.d.ts",
+      "default": "./dist/highlight.js"
     }
   },
   "files": [
@@ -23,8 +27,17 @@
   "devDependencies": {
     "@skytech/eslint-config": "workspace:*",
     "@skytech/tsconfig": "workspace:*",
+    "@types/hast": "3.0.5",
     "eslint": "9.39.5",
     "typescript": "~6.0.3",
     "vitest": "5.1.0"
+  },
+  "dependencies": {
+    "@skytech/contracts": "workspace:*",
+    "hast-util-sanitize": "5.0.2",
+    "hast-util-to-html": "9.0.6",
+    "hastscript": "9.0.3",
+    "highlight.js": "11.11.2",
+    "lowlight": "3.3.0"
   }
 }

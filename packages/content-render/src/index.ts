@@ -1,2 +1,3 @@
-// Markdown → sanitized HTML pipeline. Implemented in Phase 4.2 (see docs/plan.md).
-export {};
+export { CALLOUT_LABELS, renderDocument } from './render.js';
+export type { MediaResolver, RenderDocumentOptions, RenderResult } from './render.js';
+export { articleSanitizeSchema } from './sanitize-schema.js';
